@@ -68,7 +68,7 @@ void assignSensorData(void* value, const std::string& sensorName, SensorData* da
 
 // send data to web server
 void sendData(SensorData* data) {
-  String url = "http://yourserver.com/post?" +
+  String url = "http://customwebserver.com/post?" +
                 "temp=" + String(data->temperature) +
                 "&hum=" + String(data->humidity) + 
                 "&pressure=" + String(data->pressure) +
@@ -92,6 +92,7 @@ void sendHttpRequest(String url) {
   delay(10000);
 
 
+
 //------------------------------------------------------------------------------
 // SENSOR READING FUNCTIONS
 //------------------------------------------------------------------------------
@@ -105,9 +106,8 @@ float getWeightedTemp(float dht22Temperature, float bmp180Temperature) {
   // Fixed weights has been calculated for each sensor, for faster computation.
   const float w1 = 0.0157;                    // Weight for DHT22 temperature
   const float w2 = 0.9843;                    // Weight for BMP180 temperature
-
-  float weightedTemp = (w1 * dht22Temperature) + (w2 * bmp180Temperature) / (w1 + w2); // Calculate the weighted average temperature
-  return weightedTemp;
+  
+  return (w1 * dht22Temperature + w2 * bmp180Temperature) / (w1 + w2);
 }
 
 // get light lux
@@ -141,11 +141,9 @@ int getRainStatus() {
   int rainPin = A0;                         // set the input pin for the rain sensor
   // int thresholdValue = 500;              // set the threshold value for detecting rain
   int rainState = digitalRead(rainPin);     // read the current value from the rain sensor
-  int output = (rainState == HIGH) ? 1 : 0;
   
-  return output;
+  return (rainState == HIGH) ? 1 : 0;
 }
-
 
 // get uv index
 int getUvIndex() {
@@ -178,4 +176,3 @@ int getWindDirection(int degAngle, int startAngle) {        // https://github.co
   startAngle = degAngle;
   return finaldegree;
 }
-

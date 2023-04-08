@@ -9,64 +9,68 @@
 #include <Adafruit_BMP085.h>  // Air pressure, temperature. - BMP180  (300-1100 hPa (9000m-500m above sea level), and -40°C-85°C with ±1.0°C accuracy.)
 #include <Adafruit_TSL2591.h> // Light intensity            - TSL2591 Light Flux Sensor
 #include <Adafruit_SI1145.h>  // UV radiation               - SI1145  UV sensor (seems like we can implement light flux sensing algirithm with this sensor too)
-#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>   // for sim Telkomsel          - SIM800L module
 
 #include <SPI.h>
 #include <ams_as5048b.h>      // Wind direction             - AS5048  the reading algorithm and the anemometer stl files are borrowed from Fabian Steppat's project at https://github.com/Nerdiyde/Anemosens
 #include <CO2Sensor.h>        // CO2                        - MG811   CO2 sensor
+
+#include "config.h"
+#include "defs.h"
 #include "functions.h"
-//                            // Wind speed                 - A3144 Hall Effect Sensor
-//                            // Raindrop                   - YL-83
-//                            // sim Telkomsel              - SIM800L module
 
-//Constants
-//DHT22 sensor 
-#define DHTPIN 2            // DHT22 pin
-#define DHTTYPE DHT22       // (AM2302)
-DHT dht(DHTPIN, DHTTYPE);   
-
-// YL-83 rain sensor pin 
-const int rainPin = 2; 
-
-// wind directions
-const byte windDir_pin = 10; 
-uint16_t rawData = 0;
-float degAngle = 0;
-float startAngle = 0;
-float correctedAngle = 0;
-const uint16_t COMMAND_READ = 0xFFF; // read command
-
-//Variables
-Adafruit_BMP085 bmp;                                // BMP180
-Adafruit_TSL2591 tsl  = Adafruit_TSL2591(2591);
-Adafruit_SI1145 uv;                                 // create an instance of the UV sensor object
-O2Sensor co2Sensor(A0, 0.99, 100);
-SoftwareSerial sim800l(7, 8);                       // RX, TX
-
-
-// error handling in this setup func need to be implemented soon.
 void setupSensors() {
-  SPI.begin();  
-  Serial.begin(9600);
-  dht.begin();  
-  bmp.begin()
-  Wire.begin();
-  tsl.begin();    
-  uv.begin(); // initialize the UV sensor
-  pinMode(rainPin, INPUT); // rain
-  pinMode(windDir_pin, OUTPUT);  // wind direction
-  co2Sensor.calibrate();  
+  if (!SPI.begin()) {
+    Serial.println("Failed to initialize SPI");
+    while (1); 
+  }
   
-  sim800l.begin(9600);
-  bmp.begin(0x76); // Set the I2C address to 0x76 (default)
+  Serial.begin(9600);
+  if (!dht.begin()) {
+    Serial.println("Failed to initialize DHT sensor");
+    while (1);
+  }
+  
+  if (!bmp.begin()) {
+    Serial.println("Failed to initialize BMP sensor");
+    while (1);
+  }
+
+  if (!Wire.begin()) {
+    Serial.println("Failed to initialize I2C");
+    while (1);
+  }
+  
+  if (!tsl.begin()) {
+    Serial.println("Failed to initialize TSL sensor");
+    while (1);
+  }
+  
+  if (!uv.begin()) {
+    Serial.println("Failed to initialize UV sensor");
+    while (1);
+  }
+  
+  pinMode(RAIN_PIN, INPUT);
+  co2Sensor.calibrate();
+  
+  if (!sim800l.begin(9600)) {
+    Serial.println("Failed to initialize SIM800L");
+    while (1);
+  }
+  
+  if (!bmp.begin(BMP_I2C_ADDRESS)) {
+    Serial.println("Failed to initialize BMP sensor at I2C address 0x76");
+    while (1);
+  }
 
   init_wind_direction_sensor();
-  init_wind_speed_sensor(); 
+  init_wind_speed_sensor();
 }
 
-// read data from sensors and update the SensorData struct values.
-void readSensors() {
-  SensorData data; // struct for sensor values
+// read sensors
+void readSensors() {                                 // read data from sensors and update the SensorData struct values.
+  SensorData data;                                   // struct for sensor values
   
   // temperature
   // implementing calculation based on two kind of sensors with different accuracy
