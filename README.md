@@ -23,6 +23,8 @@ To use this firmware, you will need an Arduino board and the necessary sensors. 
 -   CO2 
 -   Error monitoring
 
+![Arduino and sensors schematic](https://github.com/cloned-doy/arduino-station/blob/master/pictures/schematic.png)
+
 ### Requirements
 - Arduino Pro Mini
 - DHT22 temperature and humidity sensor
