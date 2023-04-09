@@ -3,16 +3,16 @@
 //------------------------------------------------------------------------------
 // struct to hold sensor values and sensor fails info
 struct SensorData {
-  float temperature;
-  float humidity;
-  float pressure;
-  float lightIntensity;
-  int raindrop;
-  int uvRadiation;
-  int windDirection;
-  float windSpeed;
+  float temperature;      // celcius
+  float humidity;         //
+  float pressure;         // mb
+  float lightIntensity;   // lux
+  int raindrop;           // rain or not
+  int uvRadiation;        //
+  int windDirection;      // relative degree or can be 8 wind directions
+  float windSpeed;        // meter / minute
   int co2;
-  std::string error;  // configured as std::string, to simply access the existed string memory address, to avoid re-copying the string value
+  std::string error;      // configured as std::string, to simply access the existed string memory address, to avoid re-copying the string value
 };
 
 // naive error checking
@@ -91,8 +91,6 @@ void sendHttpRequest(String url) {
   sim800l.println("AT+HTTPACTION=0");
   delay(10000);
 
-
-
 //------------------------------------------------------------------------------
 // SENSOR READING FUNCTIONS
 //------------------------------------------------------------------------------
@@ -104,8 +102,8 @@ void sendHttpRequest(String url) {
 float getWeightedTemp(float dht22Temperature, float bmp180Temperature) {  
   // Weight = 1 / Variance, where variance = sum of (each data point - mean)^2 / number of data points.
   // Fixed weights has been calculated for each sensor, for faster computation.
-  const float w1 = 0.0157;                    // Weight for DHT22 temperature
-  const float w2 = 0.9843;                    // Weight for BMP180 temperature
+  const float w1 = 0.33;                    // Weight for DHT22 temperature
+  const float w2 = 0.67;                    // Weight for BMP180 temperature
   
   return (w1 * dht22Temperature + w2 * bmp180Temperature) / (w1 + w2);
 }
