@@ -16,4 +16,3 @@ SoftwareSerial sim800l(7, 8);                             // sim800l RX, TX
 
 // Define the software serial pins for the SIM800L module
 SoftwareSerial sim800lSerial(7, 8);
-

@@ -6,7 +6,7 @@ This is the firmware for an experimental Arduino project, developed using the AT
 
 This arduino system are designed to be implemented in solar panel based power system. 
 
-For reference, here is the [project report](https://docs.google.com/document/d/11zYSdMaM7gJ9rtgTeNqNHVAx77eldqqeS4g4kZ2feqw/edit?usp=sharing)  and the [bill of materials](https://docs.google.com/spreadsheets/d/1Wg0oTnzC-42zgrJtUEOQMCml9h45T37ViTcRstmF_0g/edit?usp=sharing).
+For reference, here is the [project report](https://docs.google.com/presentation/d/1tROaXa0MtRhQxonVZXlXTMQFhTLcwuryqy-Utew41ss/edit?usp=sharing)  and the [bill of materials](https://docs.google.com/spreadsheets/d/1Wg0oTnzC-42zgrJtUEOQMCml9h45T37ViTcRstmF_0g/edit?usp=sharing).
 
 ### Getting Started
 To use this firmware, you will need an Arduino board and the necessary sensors. Simply upload the firmware.ino file to your Arduino board and connect the sensors according to the pin assignments in the PCB.

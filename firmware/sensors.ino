@@ -15,10 +15,6 @@
 #include <ams_as5048b.h>      // Wind direction             - AS5048  the reading algorithm and the anemometer stl files are borrowed from Fabian Steppat's project at https://github.com/Nerdiyde/Anemosens
 #include <CO2Sensor.h>        // CO2                        - MG811   CO2 sensor
 
-#include "config.h"
-#include "defs.h"
-#include "functions.h"
-
 void setupSensors() {
   if (!SPI.begin()) {
     Serial.println("Failed to initialize SPI");
@@ -106,8 +102,8 @@ void readSensors() {                                 // read data from sensors a
   assignSensorData(&degreeDirection, "windDirection", &data)
 
   // windSpeed: a floating-point value representing the wind speed in meters per second.
-  // wspeed = digitalRead(2);
-  // assignSensorData(&wspeed, "windSpeed", &data)
+  wspeed = digitalRead(2);
+  assignSensorData(&wspeed, "windSpeed", &data)
 
   // co2: an integer value representing the CO2 level.
   int co2val = co2Sensor.read();  

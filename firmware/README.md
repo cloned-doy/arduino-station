@@ -11,6 +11,9 @@
 ### further development 
 - fix (or replace) the naive error checking mechanisms to prevent false sensor error readings. 
    
- - remote firmware monitoring (error check, or even reboot the arduino), and
-   over-the-air (OTA) updates to improve maintainability and ease of use
+ - remote firmware monitoring (error check, or even command the board to reboot accordingly)
+
+ - over-the-air (OTA) updates to improve maintainability and ease of use (seems like arduino pro mini doesnt supported this functionality yet)
   
+
+### plese take care the example.ino file before uploading the firmware to the board.
